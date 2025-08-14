@@ -1,0 +1,76 @@
+{
+  "cursor.chat.enabled": true,
+  "cursor.chat.defaultModel": "claude-3.5-sonnet",
+  "cursor.chat.showInEditorContextMenu": true,
+  "cursor.chat.alwaysSearchWeb": false,
+  "cursor.chat.includeCursor": true,
+  "cursor.copilot.enabled": true,
+  "cursor.copilot.includeCursor": true,
+  "cursor.copilot.maxPromptTokens": 20000,
+  "cursor.general.enableTabs": true,
+  "cursor.general.enableInlineChat": true,
+  "cursor.general.enableDiff": true,
+  "cursor.ai.enableCodeActions": true,
+  "cursor.ai.enableErrorExplanation": true,
+  "cursor.ai.enableRefactoring": true,
+  "cursor.ai.enableCommitMessage": true,
+  "cursor.rules": {
+    "enforceRootExecution": true,
+    "blockedPatterns": [
+      "^cd\\s+",
+      "^flutter\\s+",
+      "^dart\\s+",
+      "\\(cd\\s+.*flutter.*\\)",
+      "\\(cd\\s+.*dart.*\\)"
+    ],
+    "allowedExceptions": ["\\(cd apps/student-app/ios && pod install\\)"],
+    "requiredNpmScripts": ["flutter", "dart"]
+  },
+  "cursor.codeValidation": {
+    "enabled": true,
+    "preExecuteHooks": [
+      {
+        "name": "validate-command",
+        "script": "scripts/validate-command.js",
+        "blocking": true,
+        "timeout": 5000
+      },
+      {
+        "name": "check-cd-violation",
+        "script": "scripts/check-cd-violation.js",
+        "blocking": true,
+        "timeout": 3000
+      }
+    ]
+  },
+  "cursor.notifications": {
+    "violationAlert": {
+      "enabled": true,
+      "message": "⚠️ コマンド実行違反が検出されました: サブディレクトリへの移動は禁止されています。npm scripts または適切な方法を使用してください。"
+    }
+  },
+  "cursor.workspace": {
+    "autoSave": "afterDelay",
+    "autoSaveDelay": 1000,
+    "formatOnSave": true,
+    "organizeImportsOnSave": true,
+    "codeActionsOnSave": {
+      "source.fixAll": true,
+      "source.organizeImports": true
+    }
+  },
+  "cursor.terminal": {
+    "defaultShell": "/bin/zsh",
+    "workingDirectory": "${workspaceFolder}",
+    "environmentVariables": {
+      "NODE_ENV": "development"
+    }
+  },
+  "cursor.git": {
+    "enableSmartCommit": true,
+    "enableStaging": true,
+    "confirmSync": false,
+    "autofetch": true
+  }
+}
+

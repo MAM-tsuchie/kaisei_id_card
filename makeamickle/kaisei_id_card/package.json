@@ -1,0 +1,63 @@
+{
+  "name": "kaisei-id-card",
+  "version": "1.0.0",
+  "description": "デジタル学生証システム",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "functions",
+    "packages/*"
+  ],
+  "scripts": {
+    "preinstall": "node scripts/claude-ai-instructions.js",
+    "postinstall": "node scripts/claude-ai-instructions.js",
+    "check-root": "node -e \"if (!process.cwd().endsWith('/kaisei_id_card')) { console.error('❌ ERROR: Commands must be run from project root (/kaisei_id_card)'); console.error('Current:', process.cwd()); process.exit(1); }\"",
+    "check-java": "node -e \"const { execSync } = require('child_process'); try { execSync('/opt/homebrew/opt/openjdk@11/bin/java -version', {stdio: 'ignore'}); console.log('✅ Java OK'); } catch(e) { console.error('❌ Java not found at /opt/homebrew/opt/openjdk@11'); console.error('Run: brew install openjdk@11'); process.exit(1); }\"",
+    "claude-help": "node scripts/claude-ai-instructions.js",
+    "dev:all": "npm run check-root && concurrently \"npm run dev:admin\" \"npm run dev:functions\" \"npm run dev:emulator\"",
+    "dev:admin": "npm run check-root && npm run dev --workspace=apps/admin-web",
+    "dev:functions": "npm run check-root && JAVA_HOME=/opt/homebrew/opt/openjdk@11 firebase emulators:start --only functions --project demo-kaisei-id-card",
+    "dev:emulator": "npm run check-root && JAVA_HOME=/opt/homebrew/opt/openjdk@11 firebase emulators:start --project demo-kaisei-id-card",
+    "dev:flutter": "cd apps/student-app && flutter run -d chrome --target lib/main.dart --dart-define=ENV=local",
+    "build:all": "npm run check-root && npm run build:admin && npm run build:functions && npm run build:flutter",
+    "build:admin": "npm run check-root && npm run build --workspace=apps/admin-web",
+    "build:functions": "npm run check-root && npm run build --workspace=functions",
+    "build:flutter": "cd apps/student-app && flutter build apk --release",
+    "build:flutter:android": "cd apps/student-app && flutter build apk --release",
+    "build:flutter:ios": "cd apps/student-app && flutter build ios --release",
+    "test:all": "npm run check-root && npm run test:admin && npm run test:functions && npm run test:flutter",
+    "test:admin": "npm run check-root && npm run test --workspace=apps/admin-web",
+    "test:functions": "npm run check-root && npm run test --workspace=functions",
+    "test:flutter": "cd apps/student-app && flutter test",
+    "analyze:flutter": "cd apps/student-app && flutter analyze",
+    "test:security-rules": "npm run check-root && npm run check-java && JAVA_HOME=/opt/homebrew/opt/openjdk@11 firebase emulators:exec --only firestore \"npm run test:rules\"",
+    "test:e2e": "npm run check-root && cypress run",
+    "lint": "npm run check-root && npm run lint:all",
+    "lint:all": "npm run lint:js && npm run lint:flutter",
+    "lint:js": "npm run check-root && eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:flutter": "cd apps/student-app && flutter analyze",
+    "format:all": "npm run check-root && npm run format:js && npm run format:flutter",
+    "format:js": "npm run check-root && prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
+    "format:flutter": "cd apps/student-app && dart format .",
+    "clean:flutter": "cd apps/student-app && flutter clean",
+    "pub:flutter": "cd apps/student-app && flutter pub get",
+    "type-check": "npm run check-root && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "concurrently": "^8.2.2",
+    "cypress": "^13.6.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

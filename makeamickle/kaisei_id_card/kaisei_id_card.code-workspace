@@ -1,0 +1,124 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": ".",
+    },
+    {
+      "name": "Admin Web",
+      "path": "./apps/admin-web",
+    },
+    {
+      "name": "Student App",
+      "path": "./apps/student-app",
+    },
+    {
+      "name": "Functions",
+      "path": "./functions",
+    },
+    {
+      "name": "Shared Package",
+      "path": "./packages/shared",
+    },
+    {
+      "name": "Firebase Config",
+      "path": "./packages/firebase-config",
+    },
+    {
+      "name": "Documentation",
+      "path": "./docs",
+    },
+    {
+      "name": "Scripts",
+      "path": "./scripts",
+    },
+  ],
+  "settings": {
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.suggest.autoImports": true,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit",
+    },
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/build": true,
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/dist": true,
+      "**/coverage": true,
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/build": true,
+      "**/dist": true,
+      "**/coverage": true,
+      "**/.git": true,
+    },
+    "eslint.workingDirectories": [
+      "apps/admin-web",
+      "functions",
+      "packages/shared",
+      "packages/firebase-config",
+    ],
+    "dart.flutterSdkPath": "/opt/homebrew/bin/flutter",
+    "cursor.chat.defaultModel": "claude-3.5-sonnet",
+    "cursor.chat.enabled": true,
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.cwd": "${workspaceFolder}",
+  },
+  "extensions": {
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss",
+      "ms-vscode.vscode-typescript-next",
+      "dart-code.dart-code",
+      "dart-code.flutter",
+      "ms-vscode.vscode-eslint",
+      "firebase.vscode-firebase-explorer",
+      "eamodio.gitlens",
+    ],
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Build All",
+        "dependsOrder": "sequence",
+        "dependsOn": [
+          "Build Shared Package",
+          "Build Firebase Config",
+          "Build Functions",
+          "Build Admin Web",
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true,
+        },
+      },
+      {
+        "label": "Test All",
+        "dependsOrder": "parallel",
+        "dependsOn": ["Test Admin Web", "Test Functions", "Test Shared Package", "Flutter Test"],
+        "group": {
+          "kind": "test",
+          "isDefault": true,
+        },
+      },
+    ],
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Workspace",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/scripts/launch-workspace.js",
+        "console": "integratedTerminal",
+      },
+    ],
+  },
+}
+

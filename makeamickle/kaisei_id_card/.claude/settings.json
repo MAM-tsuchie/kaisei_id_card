@@ -1,0 +1,60 @@
+{
+  "hooks": {
+    "tool-call": {
+      "description": "Hook that validates tool calls before execution",
+      "enabled": true,
+      "command": "node scripts/validate-command.js",
+      "args": ["${tool}", "${params}"],
+      "blocking": true,
+      "timeout": 5000
+    },
+    "bash-pre-execute": {
+      "description": "Validates bash commands before execution to ensure compliance with directory rules",
+      "enabled": true,
+      "command": "node scripts/check-cd-violation.js",
+      "args": ["${command}"],
+      "blocking": true,
+      "timeout": 3000,
+      "on_failure": "block"
+    },
+    "home-folder-protection": {
+      "description": "Prevents modifications to home directory configuration files",
+      "enabled": true,
+      "command": "node scripts/home-folder-protection.js",
+      "args": ["${command}"],
+      "blocking": true,
+      "timeout": 3000,
+      "on_failure": "block"
+    }
+  },
+  "rules": {
+    "enforce_root_execution": true,
+    "blocked_patterns": [
+      "^cd\\s+",
+      "^flutter\\s+",
+      "^dart\\s+",
+      "\\(cd\\s+.*flutter.*\\)",
+      "\\(cd\\s+.*dart.*\\)",
+      ">>.*~/\\.",
+      ">.*~/\\.",
+      "echo.*>>.*~/\\.",
+      "echo.*>.*~/\\.",
+      "vim.*~/\\.",
+      "nano.*~/\\.",
+      "touch.*~/\\."
+    ],
+    "allowed_exceptions": [
+      "\\(cd apps/student-app/ios && pod install\\)"
+    ],
+    "required_npm_scripts": [
+      "flutter",
+      "dart"
+    ]
+  },
+  "notifications": {
+    "violation_alert": {
+      "enabled": true,
+      "message": "⚠️ コマンド実行違反が検出されました: サブディレクトリへの移動は禁止されています。npm scripts または適切な方法を使用してください。"
+    }
+  }
+}
